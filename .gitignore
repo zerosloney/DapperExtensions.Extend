@@ -1,0 +1,7 @@
+obj
+bin
+*.suo
+*.user
+config
+*.pubxml
+PublishProfiles
