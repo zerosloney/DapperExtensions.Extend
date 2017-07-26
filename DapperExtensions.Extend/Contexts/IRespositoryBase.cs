@@ -14,11 +14,11 @@ namespace DapperExtensions.Extend
 
         #region 同步方法
         /// <summary>
-        /// 根据主键Id获取一个实体
+        /// 根据主键获取一个实体
         /// </summary>
         /// <param name="id">主键Id</param>
         /// <returns></returns>
-        T Get(int id);
+        T Get<TValue>(Expression<Func<T, object>> primaryKey, TValue value) where TValue : struct;
         /// <summary>
         /// 添加一个实体(pk为空时,需要给指定主键赋值;pk不为空,则排除该主键)
         /// </summary>

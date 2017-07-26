@@ -4,6 +4,7 @@ using DapperExtensions.Mapper;
 using DapperExtensions.Sql;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace DapperExtensions.Extend
 {
@@ -17,6 +18,27 @@ namespace DapperExtensions.Extend
         public SqlBuilder(IDapperExtensionsConfiguration configuration) : base(configuration)
         {
             _configuration = configuration;
+        }
+
+
+        public string SelectSingle<T>(string primaryKey) where T : class
+        {
+            IClassMapper classMap = _configuration.GetMap<T>();
+            string top = "";
+            if (_configuration.Dialect is SqlServerDialect)
+            {
+                top = " Top 1 ";
+            }
+            StringBuilder sql = new StringBuilder(string.Format("SELECT {2} {0} FROM {1}",
+                BuildSelectColumns(classMap),
+                GetTableName(classMap), top));
+            sql.Append(" WHERE ");
+            sql.AppendFormat(" {0}={1} ", _configuration.Dialect.ParameterPrefix + primaryKey, "@" + primaryKey);
+            if (_configuration.Dialect is MySqlDialect)
+            {
+                sql.Append(" Limit 1; ");
+            }
+            return sql.ToString();
         }
 
         /// <summary>

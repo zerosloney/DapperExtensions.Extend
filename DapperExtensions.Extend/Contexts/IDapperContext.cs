@@ -21,11 +21,14 @@ namespace DapperExtensions.Extend
         /// 获取一个实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="id">主键Id</param>
+        /// <param name="id">主键</param>
+        /// <param name="value">主键值</param>
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        T Get<T>(int id, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        T Get<T, T2>(string id, T2 value, int? commandTimeout = default(int?))
+            where T : class
+            where T2 : struct;
         /// <summary>
         /// 添加一组实体(pk为空时,需要给指定主键赋值;pk不为空,则排除该主键)
         /// </summary>
@@ -44,7 +47,7 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns>返回影响条数</returns>
-        int Insert<T>(T entity, string primaryKey, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        int Insert<T>(T entity, string primaryKey, int? commandTimeout = default(int?)) where T : class;
         /// <summary>
         /// 更新语句
         /// </summary>
@@ -54,7 +57,7 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        bool Update<T>(IPredicate predicate, IDictionary<string, object> set, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        bool Update<T>(IPredicate predicate, IDictionary<string, object> set, int? commandTimeout = default(int?)) where T : class;
         /// <summary>
         /// 实体的数量
         /// </summary>
@@ -63,7 +66,7 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        int Count<T>(IPredicate predicate, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        int Count<T>(IPredicate predicate, int? commandTimeout = default(int?)) where T : class;
         /// <summary>
         /// 获取实体集合(分页)
         /// </summary>
@@ -75,7 +78,7 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        IEnumerable<T> GetPage<T>(IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        IEnumerable<T> GetPage<T>(IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, int? commandTimeout = default(int?)) where T : class;
         /// <summary>
         /// 获取实体集合
         /// </summary>
@@ -85,6 +88,6 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        IEnumerable<T> GetList<T>(IPredicate predicate, IList<ISort> sort, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        IEnumerable<T> GetList<T>(IPredicate predicate, IList<ISort> sort,  int? commandTimeout = default(int?)) where T : class;
     }
 }

@@ -56,6 +56,13 @@ var b = userRespo.Insert(u);
 var c = userRespo.Insert(u,x=>x.Id);
 ```
 
+## Get Single Operation
+
+```c#
+//指定主键查询
+var b = userRespo.Get(x => x.Id, 1111111111);
+```
+
 
 
 

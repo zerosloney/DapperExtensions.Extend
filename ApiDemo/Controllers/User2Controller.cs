@@ -43,7 +43,7 @@ namespace ApiDemo.Controllers
         [Route("one")]
         public IHttpActionResult GetUser()
         {
-            var b = userRespo.Get(1);
+            var b = userRespo.Get(x => x.Id, 1111111111);
             return Json(b);
         }
 

@@ -29,13 +29,13 @@ namespace DapperExtensions.Extend
             return _context.Count<T>(expression.ToPredicateGroup());
         }
         /// <summary>
-        /// 根据主键Id获取一个实体
+        /// 根据主键获取一个实体
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public T Get(int id)
+        public T Get<TValue>(Expression<Func<T, object>> primaryKey, TValue value) where TValue : struct
         {
-            return _context.Get<T>(id);
+            return _context.Get<T, TValue>(ExpressionUtils.GetProperty(primaryKey), value);
         }
         /// <summary>
         /// 实体集合

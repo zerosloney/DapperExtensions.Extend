@@ -35,15 +35,21 @@ namespace DapperExtensions.Extend
         /// 获取一个实体
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="id"></param>
+        /// <param name="id">主键</param>
+        /// <param name="value">主键值</param>
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public T Get<T>(int id, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        public T Get<T, T2>(string id, T2 value, int? commandTimeout = default(int?))
+            where T : class
+            where T2 : struct
         {
             using (DB)
             {
-                return DB.Get<T>(id, transaction, commandTimeout);
+                var sql = _builder.SelectSingle<T>(id);
+                DynamicParameters param = new DynamicParameters();
+                param.Add(id, value);
+                return DB.Query<T>(sql, param).SingleOrDefault();
             }
         }
         /// <summary>
@@ -83,7 +89,7 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public int Insert<T>(T entity, string primaryKey, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        public int Insert<T>(T entity, string primaryKey, int? commandTimeout = default(int?)) where T : class
         {
             using (DB)
             {
@@ -100,7 +106,7 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public bool Update<T>(IPredicate predicate, IDictionary<string, object> set, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        public bool Update<T>(IPredicate predicate, IDictionary<string, object> set, int? commandTimeout = default(int?)) where T : class
         {
             using (DB)
             {
@@ -109,7 +115,7 @@ namespace DapperExtensions.Extend
                 DynamicParameters param = new DynamicParameters();
                 where.AsList().ForEach(x => param.Add(x.Key, x.Value));
                 set.AsList().ForEach(x => param.Add(x.Key, x.Value));
-                return DB.Execute(sql, param, transaction, commandTimeout) > 0 ? true : false;
+                return DB.Execute(sql, param) > 0 ? true : false;
             }
         }
         /// <summary>
@@ -120,11 +126,11 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public int Count<T>(IPredicate predicate, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        public int Count<T>(IPredicate predicate, int? commandTimeout = default(int?)) where T : class
         {
             using (DB)
             {
-                return DB.Count<T>(predicate, transaction, commandTimeout);
+                return DB.Count<T>(predicate);
             }
         }
         /// <summary>
@@ -138,7 +144,7 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public IEnumerable<T> GetPage<T>(IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        public IEnumerable<T> GetPage<T>(IPredicate predicate, IList<ISort> sort, int page, int resultsPerPage, int? commandTimeout = default(int?)) where T : class
         {
             using (DB)
             {
@@ -147,7 +153,7 @@ namespace DapperExtensions.Extend
                     page = 1;
                 }
                 page -= 1;
-                return DB.GetPage<T>(predicate, sort, page, resultsPerPage, transaction, commandTimeout);
+                return DB.GetPage<T>(predicate, sort, page, resultsPerPage);
             }
         }
         /// <summary>
@@ -159,11 +165,11 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public IEnumerable<T> GetList<T>(IPredicate predicate, IList<ISort> sort, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        public IEnumerable<T> GetList<T>(IPredicate predicate, IList<ISort> sort, int? commandTimeout = default(int?)) where T : class
         {
             using (DB)
             {
-                return DB.GetList<T>(predicate, sort, transaction, commandTimeout);
+                return DB.GetList<T>(predicate, sort);
             }
         }
         /// <summary>
