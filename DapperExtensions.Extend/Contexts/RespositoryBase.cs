@@ -59,7 +59,7 @@ namespace DapperExtensions.Extend
         /// <returns></returns>
         public IEnumerable<T> GetPage(Expression<Func<T, bool>> expression, Sorting<T>[] sorts, int page, int resultsPerPage, bool isTotal, ref int total)
         {
-            if (sorts ==null || sorts.Count() == 0)
+            if (sorts == null || sorts.Count() == 0)
             {
                 throw new ArgumentNullException("排序字段不能为空");
             }
@@ -74,23 +74,24 @@ namespace DapperExtensions.Extend
         /// 添加一个实体
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="primaryKey"></param>
         /// <returns></returns>
-        public bool Insert(T entity)
+        public bool Insert(T entity, Expression<Func<T, object>> primaryKey = null)
         {
-            return _context.Insert(entity) > 0 ? true : false;
+            return _context.Insert(entity, ExpressionUtils.GetProperty(primaryKey)) > 0 ? true : false;
         }
         /// <summary>
         /// 批量添加一个实体
         /// </summary>
         /// <param name="entities"></param>
-        /// <param name="transaction"></param>
+        /// <param name="primaryKey"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public bool Insert(IEnumerable<T> entities, IDbTransaction transaction = null, int? commandTimeout = default(int?))
+        public bool Insert(IEnumerable<T> entities, Expression<Func<T, object>> primaryKey = null, int? commandTimeout = default(int?))
         {
             try
             {
-                _context.Insert(entities, transaction, commandTimeout);
+                _context.Insert(entities, ExpressionUtils.GetProperty(primaryKey), commandTimeout);
                 return true;
             }
             catch
@@ -108,7 +109,7 @@ namespace DapperExtensions.Extend
         public bool Update(Expression<Func<T, bool>> expression, params DbFiled<T>[] fileds)
         {
             return _context.Update<T>(expression.ToPredicateGroup(), fileds.ToPropertyParam());
-        } 
+        }
         #endregion
     }
 }

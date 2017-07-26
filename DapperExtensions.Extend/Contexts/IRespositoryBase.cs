@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace DapperExtensions.Extend
 {
-    public interface IRespositoryBase<T> where T:class
+    public interface IRespositoryBase<T> where T : class
     {
         /// <summary>
         /// 数据上下文实例
@@ -20,19 +20,20 @@ namespace DapperExtensions.Extend
         /// <returns></returns>
         T Get(int id);
         /// <summary>
-        /// 添加一个实体
+        /// 添加一个实体(pk为空时,需要给指定主键赋值;pk不为空,则排除该主键)
         /// </summary>
         /// <param name="entity"></param>
+        /// <param name="primaryKey"></param>
         /// <returns></returns>
-        bool Insert(T entity);
+        bool Insert(T entity, Expression<Func<T, object>> primaryKey = null);
         /// <summary>
         /// 批量添加一个实体
         /// </summary>
         /// <param name="entities"></param>
-        /// <param name="transaction"></param>
+        /// <param name="primaryKey"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        bool Insert(IEnumerable<T> entities, IDbTransaction transaction = null, int? commandTimeout = default(int?));
+        bool Insert(IEnumerable<T> entities, Expression<Func<T, object>> primaryKey = null, int? commandTimeout = default(int?));
         /// <summary>
         /// 根据表达式查询实体的数量
         /// </summary>
@@ -63,7 +64,7 @@ namespace DapperExtensions.Extend
         /// <param name="expression">表达式</param>
         /// <param name="fileds">更新字段</param>
         /// <returns></returns>
-        bool Update(Expression<Func<T, bool>> expression, params DbFiled<T>[] fileds); 
+        bool Update(Expression<Func<T, bool>> expression, params DbFiled<T>[] fileds);
         #endregion
     }
 }

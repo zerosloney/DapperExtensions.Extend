@@ -20,6 +20,34 @@ namespace DapperExtensions.Extend
         }
 
         /// <summary>
+        /// 生成insert语句
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="pk"></param>
+        /// <returns></returns>
+        public string Insert<T>(T entity, string pk) where T : class
+        {
+            IClassMapper classMap = _configuration.GetMap<T>();
+            var columns = classMap.Properties;
+            if (!string.IsNullOrEmpty(pk))
+            {
+                columns = columns.Where(x => x.ColumnName != pk).ToList();
+            }
+            if (!columns.Any())
+            {
+                throw new ArgumentException("No columns were mapped.");
+            }
+            var columnNames = columns.Select(p => GetColumnName(classMap, p, false));
+            var parameters = columns.Select(p => _configuration.Dialect.ParameterPrefix + p.Name);
+            string sql = string.Format("INSERT INTO {0} ({1}) VALUES ({2})",
+                                       GetTableName(classMap),
+                                       columnNames.AppendStrings(),
+                                       parameters.AppendStrings());
+            return sql;
+        }
+
+        /// <summary>
         /// 生成update语句
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -30,7 +58,7 @@ namespace DapperExtensions.Extend
         public string Update<T>(IPredicate predicate, IDictionary<string, object> where, IEnumerable<string> set) where T : class
         {
             IClassMapper classMap = _configuration.GetMap<T>();
-            if (predicate==null || where == null || set == null)
+            if (predicate == null || where == null || set == null)
             {
                 throw new ArgumentNullException("predicate Or where Or set is null");
             }

@@ -27,22 +27,24 @@ namespace DapperExtensions.Extend
         /// <returns></returns>
         T Get<T>(int id, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
         /// <summary>
-        /// 添加一组实体
+        /// 添加一组实体(pk为空时,需要给指定主键赋值;pk不为空,则排除该主键)
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
-        /// <param name="transaction"></param>
+        /// <param name="primaryKey"></param>
         /// <param name="commandTimeout"></param>
-        void Insert<T>(IEnumerable<T> entities, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        /// <returns>返回影响条数</returns>
+        int Insert<T>(IEnumerable<T> entities, string primaryKey, int? commandTimeout = default(int?)) where T : class;
         /// <summary>
-        /// 添加实体
+        /// 添加一个实体(pk为空时,需要给指定主键赋值;pk不为空,则排除该主键)
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
+        /// <param name="primaryKey"></param>
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
-        /// <returns></returns>
-        int Insert<T>(T entity, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
+        /// <returns>返回影响条数</returns>
+        int Insert<T>(T entity, string primaryKey, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class;
         /// <summary>
         /// 更新语句
         /// </summary>

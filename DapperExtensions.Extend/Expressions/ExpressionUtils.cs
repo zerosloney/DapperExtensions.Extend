@@ -31,7 +31,12 @@ namespace DapperExtensions.Extend
         /// <returns></returns>
         public static string GetProperty<T>(Expression<Func<T, object>> expression)
         {
+            if (expression == null) { return null; }
             PropertyInfo propertyInfo = ReflectionHelper.GetProperty(expression) as PropertyInfo;
+            if (propertyInfo == null)
+            {
+                return null;
+            }
             return propertyInfo.Name;
         }
     }

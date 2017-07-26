@@ -44,7 +44,16 @@ var b = userRespo.GetPage(x => x.Id > 1, sorts, 1, 5, false, ref total);
 DbFiled<user> f1 = new DbFiled<user>(x => x.Age, 27);
 //根据主键更新
 var b = userRespo.Update(x => x.Id == 56907279991046144, f1);
-return Json(b);
+```
+
+## Insert Operation
+
+```c#
+user u = new user() { Id = 1111111111, Name = "fd13", Age = 26 };
+//指定主键Id的值(db 无自增主键)
+var b = userRespo.Insert(u);
+//不指定主键Id的值(db 自增主键)
+var c = userRespo.Insert(u,x=>x.Id);
 ```
 
 

@@ -51,28 +51,44 @@ namespace DapperExtensions.Extend
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
-        /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
-        public void Insert<T>(IEnumerable<T> entities, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        /// <returns></returns>
+        public int Insert<T>(IEnumerable<T> entities, string primaryKey, int? commandTimeout = default(int?)) where T : class
         {
-            using (DB)
+            DB.Open();
+            var transaction = DB.BeginTransaction();
+            var result = 0;
+            try
             {
-                DB.Insert(entities, transaction, commandTimeout);
+                var sql = _builder.Insert(entities.First(), primaryKey);
+                result = DB.Execute(sql, entities, transaction, commandTimeout);
+                transaction.Commit();
             }
+            catch
+            {
+                transaction.Rollback();
+            }
+            finally
+            {
+                DB.Close();
+            }
+            return result;
         }
         /// <summary>
-        /// 添加
+        /// 添加返回影响条数
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
+        /// <param name="primaryKey"></param>
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        public int Insert<T>(T entity, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
+        public int Insert<T>(T entity, string primaryKey, IDbTransaction transaction = null, int? commandTimeout = default(int?)) where T : class
         {
             using (DB)
             {
-                return DB.Insert(entity, transaction, commandTimeout);
+                var sql = _builder.Insert(entity, primaryKey);
+                return DB.Execute(sql, entity);
             }
         }
         /// <summary>

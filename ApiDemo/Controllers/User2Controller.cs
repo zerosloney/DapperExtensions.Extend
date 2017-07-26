@@ -23,7 +23,10 @@ namespace ApiDemo.Controllers
         public IHttpActionResult CreateUser()
         {
             var u = new user() { Id = 1111111111, Name = "fd13", Age = 26 };
+            //指定主键Id
             var b = userRespo.Insert(u);
+            //不指定主键Id
+            userRespo.Insert(u, x => x.Id);
             return Json(b);
         }
 
