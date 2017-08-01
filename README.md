@@ -1,10 +1,11 @@
 # 介绍
 
 这是基于[DapperExtension](https://github.com/tmsmith/Dapper-Extensions)的添加表达式和更新插入方法的重写。
-* 1.添加IDapperContext和IResposorityBase数据访问方法。
-* 2.使用前先实例这个两个类。
-* 3.使用IResposorityBase方法进行添删改查。
-* 4.也可以使用Autofac等依赖框架注入实例。
+* 1.支持表达式查询集合或者分页集合
+* 2.支持指定查询字段查询单个实体,字段可以为主键或者非主键
+* 3.支持指定主键或者不指定主键添加实体
+* 4.支持更新实体时的条件参数为表达式参数
+* 5.支持debug模式下,查看生成的SQL语句,需要配置DynamicProxy([Autofac](http://autofac.readthedocs.io/en/latest/advanced/interceptors.html)或者[Castle](https://github.com/castleproject/Core))
 
 # 示例
 The following examples will use a user POCO defined as:

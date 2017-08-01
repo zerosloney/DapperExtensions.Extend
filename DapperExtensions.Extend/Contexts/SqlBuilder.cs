@@ -20,7 +20,12 @@ namespace DapperExtensions.Extend
             _configuration = configuration;
         }
 
-
+        /// <summary>
+        /// 获取查询单条语句的SQL
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
         public string SelectSingle<T>(string primaryKey) where T : class
         {
             IClassMapper classMap = _configuration.GetMap<T>();
@@ -42,7 +47,7 @@ namespace DapperExtensions.Extend
         }
 
         /// <summary>
-        /// 生成insert语句
+        /// 生成添加语句SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
@@ -70,7 +75,7 @@ namespace DapperExtensions.Extend
         }
 
         /// <summary>
-        /// 生成update语句
+        /// 生成更新语句SQL
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">where条件</param>
@@ -97,7 +102,7 @@ namespace DapperExtensions.Extend
         }
 
         /// <summary>
-        /// 生成分页数据
+        /// 生成分页SQL
         /// </summary>
         /// <param name="entityType"></param>
         /// <param name="predicate"></param>
@@ -111,6 +116,21 @@ namespace DapperExtensions.Extend
             var parameters = new Dictionary<string, object>();
             var generator = SqlFactory.GetSqlGenerator(_configuration);
             return generator.SelectPaged(classMap, predicate, sort, page, resultsPerPage, parameters);
+        }
+
+        /// <summary>
+        /// 生成获取列表的SQL
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="predicate"></param>
+        /// <param name="sort"></param>
+        /// <returns></returns>
+        public string GetList(Type entityType, IPredicate predicate, IList<ISort> sort)
+        {
+            var classMap = _configuration.GetMap(entityType);
+            var parameters = new Dictionary<string, object>();
+            var generator = SqlFactory.GetSqlGenerator(_configuration);
+            return generator.Select(classMap, predicate, sort, parameters);
         }
     }
 }

@@ -10,6 +10,11 @@ namespace DapperExtensions.Extend
         /// </summary>
         IDbConnection DB { get; }
         /// <summary>
+        /// 数据库类型
+        /// </summary>
+        string DBType { get; }
+
+        /// <summary>
         /// sql查询
         /// </summary>
         /// <typeparam name="TReturn"></typeparam>
@@ -88,6 +93,6 @@ namespace DapperExtensions.Extend
         /// <param name="transaction"></param>
         /// <param name="commandTimeout"></param>
         /// <returns></returns>
-        IEnumerable<T> GetList<T>(IPredicate predicate, IList<ISort> sort,  int? commandTimeout = default(int?)) where T : class;
+        IEnumerable<T> GetList<T>(IPredicate predicate, IList<ISort> sort, int? commandTimeout = default(int?)) where T : class;
     }
 }

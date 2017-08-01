@@ -3,10 +3,10 @@ using Castle.DynamicProxy;
 
 namespace DapperExtensions.Extend
 {
-    internal class SqlLogInterceptor : IInterceptor
+    public class SqlLogInterceptor : IInterceptor
     {
         SqlBuilder _builder;
-        public SqlLogInterceptor(string appConfigKey, string dbType = DbType.MySql)
+        public SqlLogInterceptor(string dbType = DbType.MySql)
         {
             _builder = new SqlBuilder(SqlFactory.GetDapperConfiguration(dbType));
         }
@@ -14,16 +14,22 @@ namespace DapperExtensions.Extend
         public void Intercept(IInvocation invocation)
         {
             var method = invocation.Method.Name;
-            var args = invocation.Arguments;
-            var entityType = invocation.GenericArguments[0];
-            var sql = string.Empty;
-            switch (method)
+            if (!method.StartsWith("get_"))
             {
-                case "GetPage":
-                    sql = _builder.GetPagingWithMySql(entityType, args[0] as IPredicate, args[1] as IList<ISort>, int.Parse(args[2].ToString()), int.Parse(args[3].ToString()));
-                    break;
+                var args = invocation.Arguments;
+                var entityType = invocation.GenericArguments[0];
+                var sql = string.Empty;
+                switch (method)
+                {
+                    case "GetPage":
+                        sql = _builder.GetPagingWithMySql(entityType, args[0] as IPredicate, args[1] as IList<ISort>, int.Parse(args[2].ToString()), int.Parse(args[3].ToString()));
+                        break;
+                    case "GetList":
+                        sql = _builder.GetList(entityType, args[0] as IPredicate, args[1] as IList<ISort>);
+                        break;
+                }
+                WriteSqlToConsole(sql);
             }
-            WriteSqlToConsole(sql);
             invocation.Proceed();
         }
 

@@ -1,20 +1,26 @@
-﻿using System;
+﻿//#define DEBUG
+//using Castle.DynamicProxy;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+
 
 namespace DapperExtensions.Extend
 {
     public class RespositoryBase<T> : IRespositoryBase<T> where T : class
     {
-        public IDapperContext Context { get { return _context; } }
-
         IDapperContext _context;
+        //static readonly ProxyGenerator _generator = new ProxyGenerator();
+
+        public IDapperContext Context { get { return _context; } }
 
         public RespositoryBase(IDapperContext context)
         {
             _context = context;
+//#if DEBUG
+//          _context = _generator.CreateInterfaceProxyWithTarget(context, new SqlLogInterceptor(context.DBType));
+//#endif
         }
 
         #region 同步方法
